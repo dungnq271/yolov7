@@ -10,6 +10,7 @@ import torch
 import torch.backends.cudnn as cudnn
 from numpy import random
 import pandas as pd
+from tqdm import tqdm
 
 from models.experimental import attempt_load
 from utils.datasets import LoadStreams, LoadImages
@@ -77,11 +78,11 @@ def detect(save_img=False):
     old_img_w = old_img_h = imgsz
     old_img_b = 1
 
-    df = pd.DataFrame(columns=["file_name", "bbox", "image_id", "race", "age", "emotion", "gender", "skintone", "masked", "face_img_name"])
+    df = pd.DataFrame(columns=["file_name", "bbox", "image_id", "race", "age", "emotion", "gender", "skintone", "masked"])
 
     count = 0
     t0 = time.time()
-    for path, img, im0s, vid_cap in dataset:
+    for path, img, im0s, vid_cap in tqdm(dataset):
         img = torch.from_numpy(img).to(device)
         img = img.half() if half else img.float()  # uint8 to fp16/32
         img /= 255.0  # 0 - 255 to 0.0 - 1.0
@@ -130,6 +131,9 @@ def detect(save_img=False):
                     n = (det[:, -1] == c).sum()  # detections per class
                     s += f"{n} {names[int(c)]}{'s' * (n > 1)}, "  # add to string
 
+                det = [det[det[:, 4].argmax(dim=-1)]]
+                # print(det.shape)
+
                 # Write results
                 for *xyxy, conf, cls in reversed(det):
                     if save_txt:  # Write to file
@@ -147,11 +151,12 @@ def detect(save_img=False):
                     w, h = x2 - x1, y2 - y1
                     bbox = [x1, y1, w, h]
                     # bbox = list(map(lambda x: x.cpu().item(), bbox))
-                    face_img_name = f"{count+1}.jpg"
-                    df.loc[len(df.index), ["file_name", "bbox", "face_img_name"]] = [str(p.name), bbox , face_img_name]
+                    # face_img_name = f"{count+1}.jpg"
+                    df.loc[len(df.index), ["file_name", "bbox"]] = [str(p.name), bbox]
 
                     face_img = im0[y1:y2, x1:x2]
-                    save_face_path = str(cropped_dir / face_img_name)
+                    # save_face_path = str(cropped_dir / face_img_name)
+                    save_face_path = str(cropped_dir / p.name)                    
                     cv2.imwrite(save_face_path, face_img)
 
                     count += 1
@@ -159,12 +164,7 @@ def detect(save_img=False):
             # Print time (inference + NMS)
             print(f'{s}Done. ({(1E3 * (t2 - t1)):.1f}ms) Inference, ({(1E3 * (t3 - t2)):.1f}ms) NMS')
 
-            assert count == len(df)
-            print("Total number of faces:", count)
 
-            # Save detection results
-            df_file = str(Path(opt.project) / "answers.csv")
-            df.to_csv(df_file, index=False)
 
             # Stream results
             if view_img:
@@ -190,6 +190,14 @@ def detect(save_img=False):
                             save_path += '.mp4'
                         vid_writer = cv2.VideoWriter(save_path, cv2.VideoWriter_fourcc(*'mp4v'), fps, (w, h))
                     vid_writer.write(im0)
+
+        assert count == len(df)
+        print("Total number of faces:", count)
+
+        # Save detection results
+        df_file = str(Path(opt.project) / "answers.csv")
+        df.to_csv(df_file, index=False)
+
 
     if save_txt or save_img:
         s = f"\n{len(list(save_dir.glob('labels/*.txt')))} labels saved to {save_dir / 'labels'}" if save_txt else ''
