@@ -164,8 +164,6 @@ def detect(save_img=False):
             # Print time (inference + NMS)
             print(f'{s}Done. ({(1E3 * (t2 - t1)):.1f}ms) Inference, ({(1E3 * (t3 - t2)):.1f}ms) NMS')
 
-
-
             # Stream results
             if view_img:
                 cv2.imshow(str(p), im0)
@@ -191,12 +189,12 @@ def detect(save_img=False):
                         vid_writer = cv2.VideoWriter(save_path, cv2.VideoWriter_fourcc(*'mp4v'), fps, (w, h))
                     vid_writer.write(im0)
 
-        assert count == len(df)
-        print("Total number of faces:", count)
+    assert count == len(df)
+    print("Total number of faces:", count)
 
-        # Save detection results
-        df_file = str(Path(opt.project) / "answers.csv")
-        df.to_csv(df_file, index=False)
+    # Save detection results
+    df_file = str(Path(opt.project) / "answers.csv")
+    df.to_csv(df_file, index=False)
 
 
     if save_txt or save_img:
