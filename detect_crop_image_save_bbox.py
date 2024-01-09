@@ -196,7 +196,6 @@ def detect(save_img=False):
     df_file = str(Path(opt.project) / "answers.csv")
     df.to_csv(df_file, index=False)
 
-
     if save_txt or save_img:
         s = f"\n{len(list(save_dir.glob('labels/*.txt')))} labels saved to {save_dir / 'labels'}" if save_txt else ''
         #print(f"Results saved to {save_dir}{s}")
