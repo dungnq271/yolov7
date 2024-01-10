@@ -739,7 +739,7 @@ class ComputeLossOTA:
                 + 3.0 * pair_wise_iou_loss
             )
 
-            matching_matrix = torch.zeros_like(cost, device="cpu")
+            matching_matrix = torch.zeros_like(cost, device="cuda")
 
             for gt_idx in range(num_gt):
                 _, pos_idx = torch.topk(
@@ -754,7 +754,7 @@ class ComputeLossOTA:
                 matching_matrix[:, anchor_matching_gt > 1] *= 0.0
                 matching_matrix[cost_argmin, anchor_matching_gt > 1] = 1.0
 
-            fg_mask_inboxes = (matching_matrix.sum(0) > 0.0).to(device)
+            fg_mask_inboxes = matching_matrix.sum(0) > 0.0
             matched_gt_inds = matching_matrix[:, fg_mask_inboxes].argmax(0)
         
             from_which_layer = from_which_layer[fg_mask_inboxes]
@@ -1069,7 +1069,7 @@ class ComputeLossBinOTA:
                 + 3.0 * pair_wise_iou_loss
             )
 
-            matching_matrix = torch.zeros_like(cost, device="cpu")
+            matching_matrix = torch.zeros_like(cost, device="cuda")
 
             for gt_idx in range(num_gt):
                 _, pos_idx = torch.topk(
@@ -1084,8 +1084,7 @@ class ComputeLossBinOTA:
                 matching_matrix[:, anchor_matching_gt > 1] *= 0.0
                 matching_matrix[cost_argmin, anchor_matching_gt > 1] = 1.0
 
-            # fg_mask_inboxes = matching_matrix.sum(0) > 0.0
-            fg_mask_inboxes = (matching_matrix.sum(0) > 0.0).to(device)
+            fg_mask_inboxes = matching_matrix.sum(0) > 0.0
             matched_gt_inds = matching_matrix[:, fg_mask_inboxes].argmax(0)
         
             from_which_layer = from_which_layer[fg_mask_inboxes]
@@ -1391,7 +1390,7 @@ class ComputeLossAuxOTA:
                 + 3.0 * pair_wise_iou_loss
             )
 
-            matching_matrix = torch.zeros_like(cost, device="cpu")
+            matching_matrix = torch.zeros_like(cost, device="cuda")
 
             for gt_idx in range(num_gt):
                 _, pos_idx = torch.topk(
@@ -1406,8 +1405,7 @@ class ComputeLossAuxOTA:
                 matching_matrix[:, anchor_matching_gt > 1] *= 0.0
                 matching_matrix[cost_argmin, anchor_matching_gt > 1] = 1.0
 
-            # fg_mask_inboxes = matching_matrix.sum(0) > 0.0
-            fg_mask_inboxes = (matching_matrix.sum(0) > 0.0).to(device)
+            fg_mask_inboxes = matching_matrix.sum(0) > 0.0
             matched_gt_inds = matching_matrix[:, fg_mask_inboxes].argmax(0)
         
             from_which_layer = from_which_layer[fg_mask_inboxes]
@@ -1548,7 +1546,7 @@ class ComputeLossAuxOTA:
                 + 3.0 * pair_wise_iou_loss
             )
 
-            matching_matrix = torch.zeros_like(cost, device="cpu")
+            matching_matrix = torch.zeros_like(cost, device="cuda")
 
             for gt_idx in range(num_gt):
                 _, pos_idx = torch.topk(
@@ -1563,8 +1561,7 @@ class ComputeLossAuxOTA:
                 matching_matrix[:, anchor_matching_gt > 1] *= 0.0
                 matching_matrix[cost_argmin, anchor_matching_gt > 1] = 1.0
 
-            # fg_mask_inboxes = matching_matrix.sum(0) > 0.0
-            fg_mask_inboxes = (matching_matrix.sum(0) > 0.0).to(device)
+            fg_mask_inboxes = matching_matrix.sum(0) > 0.0
             matched_gt_inds = matching_matrix[:, fg_mask_inboxes].argmax(0)
         
             from_which_layer = from_which_layer[fg_mask_inboxes]
