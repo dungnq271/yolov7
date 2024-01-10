@@ -753,6 +753,7 @@ class ComputeLossOTA:
                 _, cost_argmin = torch.min(cost[:, anchor_matching_gt > 1], dim=0)
                 matching_matrix[:, anchor_matching_gt > 1] *= 0.0
                 matching_matrix[cost_argmin, anchor_matching_gt > 1] = 1.0
+
             fg_mask_inboxes = (matching_matrix.sum(0) > 0.0).to(device)
             matched_gt_inds = matching_matrix[:, fg_mask_inboxes].argmax(0)
         
@@ -1080,7 +1081,9 @@ class ComputeLossBinOTA:
                 _, cost_argmin = torch.min(cost[:, anchor_matching_gt > 1], dim=0)
                 matching_matrix[:, anchor_matching_gt > 1] *= 0.0
                 matching_matrix[cost_argmin, anchor_matching_gt > 1] = 1.0
-            fg_mask_inboxes = matching_matrix.sum(0) > 0.0
+
+            # fg_mask_inboxes = matching_matrix.sum(0) > 0.0
+            fg_mask_inboxes = (matching_matrix.sum(0) > 0.0).to(device)
             matched_gt_inds = matching_matrix[:, fg_mask_inboxes].argmax(0)
         
             from_which_layer = from_which_layer[fg_mask_inboxes]
@@ -1398,7 +1401,9 @@ class ComputeLossAuxOTA:
                 _, cost_argmin = torch.min(cost[:, anchor_matching_gt > 1], dim=0)
                 matching_matrix[:, anchor_matching_gt > 1] *= 0.0
                 matching_matrix[cost_argmin, anchor_matching_gt > 1] = 1.0
-            fg_mask_inboxes = matching_matrix.sum(0) > 0.0
+
+            # fg_mask_inboxes = matching_matrix.sum(0) > 0.0
+            fg_mask_inboxes = (matching_matrix.sum(0) > 0.0).to(device)
             matched_gt_inds = matching_matrix[:, fg_mask_inboxes].argmax(0)
         
             from_which_layer = from_which_layer[fg_mask_inboxes]
@@ -1551,7 +1556,9 @@ class ComputeLossAuxOTA:
                 _, cost_argmin = torch.min(cost[:, anchor_matching_gt > 1], dim=0)
                 matching_matrix[:, anchor_matching_gt > 1] *= 0.0
                 matching_matrix[cost_argmin, anchor_matching_gt > 1] = 1.0
-            fg_mask_inboxes = matching_matrix.sum(0) > 0.0
+
+            # fg_mask_inboxes = matching_matrix.sum(0) > 0.0
+            fg_mask_inboxes = (matching_matrix.sum(0) > 0.0).to(device)
             matched_gt_inds = matching_matrix[:, fg_mask_inboxes].argmax(0)
         
             from_which_layer = from_which_layer[fg_mask_inboxes]
