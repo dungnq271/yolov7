@@ -967,6 +967,8 @@ class ComputeLossBinOTA:
         #indices, anch = self.find_5_positive(p, targets)
         #indices, anch = self.find_9_positive(p, targets)
 
+        device = torch.device(targets.device)
+
         matching_bs = [[] for pp in p]
         matching_as = [[] for pp in p]
         matching_gjs = [[] for pp in p]
@@ -1298,6 +1300,8 @@ class ComputeLossAuxOTA:
         matching_targets = [[] for pp in p]
         matching_anchs = [[] for pp in p]
         
+        device = torch.device(targets.device)
+
         nl = len(p)    
     
         for batch_idx in range(p[0].shape[0]):
@@ -1453,6 +1457,8 @@ class ComputeLossAuxOTA:
         matching_targets = [[] for pp in p]
         matching_anchs = [[] for pp in p]
         
+        device = torch.device(targets.device)
+
         nl = len(p)    
     
         for batch_idx in range(p[0].shape[0]):
