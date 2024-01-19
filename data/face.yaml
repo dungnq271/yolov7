@@ -1,0 +1,11 @@
+# train and val data as 1) directory: path/images/, 2) file: path/images.txt, or 3) list: [path1/images/, path2/images/]
+train: ./yolov7-face-data-sample/train/  # 118287 images
+val: ./yolov7-face-data-sample/val/  # 5000 images
+test: ./yolov7-face-data-sample/test/  # 20288 of 40670 images, submit to https://competitions.codalab.org/competitions/20794
+
+# number of classes
+nc: 1
+
+# class names
+names: [ 'face' ]
+
