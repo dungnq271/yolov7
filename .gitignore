@@ -263,3 +263,7 @@ crashlytics-build.properties
 fabric.properties
 public_test/
 yolov7_face_test_20/
+weights/*
+
+!weights/pfld.onnx
+notebooks/
