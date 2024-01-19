@@ -193,7 +193,7 @@ def detect(save_img=False):
     print("Total number of faces:", count)
 
     # Save detection results
-    df_file = str(Path(opt.project) / "answers.csv")
+    df_file = str(Path(opt.project) / "answer.csv")
     df.to_csv(df_file, index=False)
 
     if save_txt or save_img:
