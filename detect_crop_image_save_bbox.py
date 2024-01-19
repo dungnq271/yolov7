@@ -78,11 +78,11 @@ def detect(save_img=False):
     old_img_w = old_img_h = imgsz
     old_img_b = 1
 
-    df = pd.DataFrame(columns=["file_name", "bbox", "image_id", "race", "age", "emotion", "gender", "skintone", "masked"])
+    df = pd.DataFrame(columns=["file_name", "bbox", "image_id", "race", "age", "emotion", "gender", "skintone", "masked", "face_file_name"])
 
     count = 0
     t0 = time.time()
-    for path, img, im0s, vid_cap in tqdm(dataset):
+    for fid, (path, img, im0s, vid_cap) in tqdm(enumerate(dataset)):
         img = torch.from_numpy(img).to(device)
         img = img.half() if half else img.float()  # uint8 to fp16/32
         img /= 255.0  # 0 - 255 to 0.0 - 1.0
@@ -152,11 +152,12 @@ def detect(save_img=False):
                     bbox = [x1, y1, w, h]
                     # bbox = list(map(lambda x: x.cpu().item(), bbox))
                     # face_img_name = f"{count+1}.jpg"
-                    df.loc[len(df.index), ["file_name", "bbox"]] = [str(p.name), bbox]
+                    fname = str(fid+1) + ".jpg"
+                    df.loc[len(df.index), ["file_name", "bbox", "face_file_name"]] = [str(p.name), bbox, fname]
 
                     face_img = im0[y1:y2, x1:x2]
                     # save_face_path = str(cropped_dir / face_img_name)
-                    save_face_path = str(cropped_dir / p.name)                    
+                    save_face_path = str(cropped_dir / fname)                    
                     cv2.imwrite(save_face_path, face_img)
 
                     count += 1
